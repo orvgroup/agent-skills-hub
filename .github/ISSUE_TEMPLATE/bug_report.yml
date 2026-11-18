@@ -1,0 +1,57 @@
+
+name: Bug Report
+description: Report a problem with an agent skill or repository feature.
+title: "[BUG] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug. Please provide clear and accurate details.
+
+  - type: input
+    id: skill_name
+    attributes:
+      label: Affected Skill
+      description: Which skill is affected?
+      placeholder: python-debugging
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug_description
+    attributes:
+      label: Bug Description
+      description: Clearly explain the problem.
+      placeholder: Describe what happened.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction_steps
+    attributes:
+      label: Steps to Reproduce
+      description: Explain how to reproduce the issue.
+      placeholder: |
+        1. Open the skill
+        2. Follow the instructions
+        3. Observe the problem
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Expected Behavior
+      description: What should happen instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add relevant logs or screenshots. Do not include secrets.
+    validations:
+      required: false
