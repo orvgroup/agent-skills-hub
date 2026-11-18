@@ -1,0 +1,65 @@
+
+name: Feature Request
+description: Suggest a new skill or improvement.
+title: "[FEATURE] "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share a clear and practical idea that could improve this project.
+
+  - type: dropdown
+    id: request_type
+    attributes:
+      label: Request Type
+      options:
+        - New Agent Skill
+        - Improve Existing Skill
+        - New Repository Feature
+        - Documentation Improvement
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: skill_name
+    attributes:
+      label: Skill Name
+      description: Enter the proposed skill name, if applicable.
+      placeholder: e.g. database-optimizer
+    validations:
+      required: false
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Use Case
+      description: What problem would this solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution
+      description: Describe how you think this should work.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative approaches.
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add examples, references, or other useful details.
+    validations:
+      required: false
