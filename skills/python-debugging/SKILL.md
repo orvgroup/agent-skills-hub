@@ -1,9 +1,7 @@
-
 ---
 name: python-debugging
 description: Debug Python applications by analyzing tracebacks, identifying root causes, proposing minimal fixes, and suggesting regression tests. Use when investigating Python errors, exceptions, failing tests, or unexpected behavior.
 ---
-
 # Python Debugging Expert
 
 ## Purpose
