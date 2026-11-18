@@ -1,0 +1,87 @@
+```yaml
+name: Validate Agent Skills
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate skill files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Validate skill files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import sys
+
+          skill_files = sorted(Path("skills").glob("*/SKILL.md"))
+
+          if not skill_files:
+              print("ERROR: No skills/*/SKILL.md files found.")
+              sys.exit(1)
+
+          errors = []
+
+          for file in skill_files:
+              folder_name = file.parent.name
+              content = file.read_text(encoding="utf-8")
+              lines = content.splitlines()
+
+              if not lines or lines[0].strip() != "---":
+                  errors.append(f"{file}: Missing opening frontmatter delimiter.")
+                  continue
+
+              try:
+                  closing_index = next(
+                      i for i in range(1, len(lines))
+                      if lines[i].strip() == "---"
+                  )
+              except StopIteration:
+                  errors.append(f"{file}: Missing closing frontmatter delimiter.")
+                  continue
+
+              frontmatter = lines[1:closing_index]
+
+              fields = {}
+              for line in frontmatter:
+                  if ":" in line and not line.startswith((" ", "\t")):
+                      key, value = line.split(":", 1)
+                      fields[key.strip()] = value.strip().strip('"').strip("'")
+
+              if not fields.get("name"):
+                  errors.append(f"{file}: Missing or empty name field.")
+
+              if not fields.get("description"):
+                  errors.append(f"{file}: Missing or empty description field.")
+
+              if fields.get("name") != folder_name:
+                  errors.append(
+                      f"{file}: name must match folder name '{folder_name}'."
+                  )
+
+              if not content[closing_index + 1:].strip():
+                  errors.append(f"{file}: Skill instructions are empty.")
+
+          if errors:
+              print("Skill validation failed:")
+              for error in errors:
+                  print(f"- {error}")
+              sys.exit(1)
+
+          print(f"Successfully validated {len(skill_files)} skill files.")
+          PY
+```
