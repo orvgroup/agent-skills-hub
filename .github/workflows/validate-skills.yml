@@ -1,4 +1,4 @@
-```yaml
+
 name: Validate Agent Skills
 
 on:
@@ -84,4 +84,4 @@ jobs:
 
           print(f"Successfully validated {len(skill_files)} skill files.")
           PY
-```
+
