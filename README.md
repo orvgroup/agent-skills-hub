@@ -1,52 +1,75 @@
+# ORVGROUP Agent Skills Hub
 
-# 🚀 ORVGROUP Agent Skills Hub
+An open-source collection of practical, reusable skills for AI agents.
 
-A community-driven open-source collection of reusable AI agent skills.
+Our goal is to help developers build reliable AI-powered workflows through clear instructions, reusable expertise, and community contributions.
 
-Our mission is to help developers build better AI-powered workflows through shared knowledge and practical skills.
-
-## ✨ What You Will Find
-
-- Python Development Skills
-- Frontend Development Skills
-- Backend and API Skills
-- Debugging Skills
-- Code Review Skills
-- GitHub Automation Skills
-
-## 📂 Available Skills
+## Available Skills
 
 | Skill | Description |
 |---|---|
-| Python Debugging | Find and fix Python errors |
-| Frontend Developer | Build frontend applications |
-| Code Reviewer | Review code quality |
-| API Developer | Build REST APIs |
-| Git Workflow | Improve Git workflows |
+| [Python Debugging](skills/python-debugging/SKILL.md) | Diagnose Python errors and identify root causes. |
+| [Frontend Developer](skills/frontend-developer/SKILL.md) | Build responsive and accessible frontend applications. |
+| [Code Reviewer](skills/code-reviewer/SKILL.md) | Identify bugs, security issues, and code quality problems. |
+| [API Developer](skills/api-developer/SKILL.md) | Design, build, and secure REST APIs. |
+| [Git Workflow](skills/git-workflow/SKILL.md) | Follow safe Git and collaboration workflows. |
 
-## 🚀 How to Use
+## Repository Structure
 
-1. Browse the skills directory.
-2. Choose a skill.
-3. Read its SKILL.md instructions.
-4. Install it in an Agent Skills-compatible tool.
-5. Follow that tool's skill installation instructions.
+```text
+agent-skills-hub/
+├── skills/
+│   ├── python-debugging/
+│   │   └── SKILL.md
+│   ├── frontend-developer/
+│   │   └── SKILL.md
+│   ├── code-reviewer/
+│   │   └── SKILL.md
+│   ├── api-developer/
+│   │   └── SKILL.md
+│   └── git-workflow/
+│       └── SKILL.md
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+├── SECURITY.md
+├── LICENSE
+└── README.md
+```
 
-## 🤝 Contributing
+## How to Use
 
-We welcome developers worldwide!
+1. Browse the available skills.
+2. Open the skill's `SKILL.md` file.
+3. Read its instructions and requirements.
+4. Add the skill to an AI agent tool that supports the Agent Skills format.
+5. Follow the installation instructions of your chosen tool.
 
-- Submit new skills.
-- Improve existing skills.
-- Report bugs.
-- Share useful workflows.
+**Note:** Compatibility and installation methods depend on the AI agent platform.
 
-See CONTRIBUTING.md for guidelines.
+## Contributing
 
-## 📜 License
+Contributions are welcome!
 
-MIT License
+You can help by:
 
-## 🌍 Maintained by ORVGROUP
+- Creating new skills.
+- Improving existing instructions.
+- Adding practical examples.
+- Fixing errors and documentation.
+- Reporting issues.
 
-Open Source. Build Together. Grow Globally.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting a Pull Request.
+
+Please also review our [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## Security
+
+If you discover a security vulnerability, follow the instructions in [SECURITY.md](SECURITY.md).
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
+
+## Maintained by ORVGROUP
+
+Open source. Build together.
