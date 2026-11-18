@@ -10,7 +10,7 @@ on:
 
 jobs:
   validate:
-    name: Validate skill files
+    name: Validate skills and issue templates
     runs-on: ubuntu-latest
 
     steps:
@@ -22,6 +22,9 @@ jobs:
         with:
           python-version: "3.x"
 
+      - name: Install YAML parser
+        run: pip install PyYAML
+
       - name: Validate skill files
         run: |
           python - <<'PY'
@@ -29,59 +32,106 @@ jobs:
           import sys
 
           skill_files = sorted(Path("skills").glob("*/SKILL.md"))
-
-          if not skill_files:
-              print("ERROR: No skills/*/SKILL.md files found.")
-              sys.exit(1)
-
           errors = []
 
+          if not skill_files:
+              errors.append("No skills/*/SKILL.md files found.")
+
           for file in skill_files:
+              lines = file.read_text(encoding="utf-8").splitlines()
               folder_name = file.parent.name
-              content = file.read_text(encoding="utf-8")
-              lines = content.splitlines()
 
               if not lines or lines[0].strip() != "---":
-                  errors.append(f"{file}: Missing opening frontmatter delimiter.")
+                  errors.append(f"{file}: Missing opening frontmatter.")
                   continue
 
               try:
-                  closing_index = next(
+                  end = next(
                       i for i in range(1, len(lines))
                       if lines[i].strip() == "---"
                   )
               except StopIteration:
-                  errors.append(f"{file}: Missing closing frontmatter delimiter.")
+                  errors.append(f"{file}: Missing closing frontmatter.")
                   continue
 
-              frontmatter = lines[1:closing_index]
-
               fields = {}
-              for line in frontmatter:
+              for line in lines[1:end]:
                   if ":" in line and not line.startswith((" ", "\t")):
                       key, value = line.split(":", 1)
                       fields[key.strip()] = value.strip().strip('"').strip("'")
 
               if not fields.get("name"):
-                  errors.append(f"{file}: Missing or empty name field.")
+                  errors.append(f"{file}: Missing name.")
 
               if not fields.get("description"):
-                  errors.append(f"{file}: Missing or empty description field.")
+                  errors.append(f"{file}: Missing description.")
 
               if fields.get("name") != folder_name:
-                  errors.append(
-                      f"{file}: name must match folder name '{folder_name}'."
-                  )
+                  errors.append(f"{file}: Name does not match folder.")
 
-              if not content[closing_index + 1:].strip():
-                  errors.append(f"{file}: Skill instructions are empty.")
+              if not "\n".join(lines[end + 1:]).strip():
+                  errors.append(f"{file}: Empty instructions.")
 
           if errors:
-              print("Skill validation failed:")
-              for error in errors:
-                  print(f"- {error}")
+              print("\n".join(errors))
               sys.exit(1)
 
-          print(f"Successfully validated {len(skill_files)} skill files.")
+          print(f"Validated {len(skill_files)} skill files.")
           PY
 
+      - name: Validate issue templates
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+          import sys
+
+          template_dir = Path(".github/ISSUE_TEMPLATE")
+          templates = sorted(template_dir.glob("*.yml"))
+          errors = []
+
+          if not templates:
+              errors.append("No issue templates found.")
+
+          for file in templates:
+              try:
+                  data = yaml.safe_load(file.read_text(encoding="utf-8"))
+              except yaml.YAMLError as exc:
+                  errors.append(f"{file}: Invalid YAML: {exc}")
+                  continue
+
+              if not isinstance(data, dict):
+                  errors.append(f"{file}: Template must be a YAML object.")
+                  continue
+
+              for field in ("name", "description", "body"):
+                  if not data.get(field):
+                      errors.append(f"{file}: Missing {field}.")
+
+              body = data.get("body", [])
+              if not isinstance(body, list):
+                  errors.append(f"{file}: body must be a list.")
+                  continue
+
+              ids = []
+              for item in body:
+                  if not isinstance(item, dict):
+                      errors.append(f"{file}: Invalid body item.")
+                      continue
+
+                  if item.get("type") != "markdown":
+                      item_id = item.get("id")
+                      if not item_id:
+                          errors.append(f"{file}: Form field missing id.")
+                      else:
+                          ids.append(item_id)
+
+              if len(ids) != len(set(ids)):
+                  errors.append(f"{file}: Duplicate field IDs.")
+
+          if errors:
+              print("\n".join(errors))
+              sys.exit(1)
+
+          print(f"Validated {len(templates)} issue templates.")
+          PY
